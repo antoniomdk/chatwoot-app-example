@@ -1,13 +1,25 @@
-import Layout from "../components/layout"
+import { useEffect, useState } from "react";
 
 export default function IndexPage() {
+  const [chatwootData, setChatwootData] = useState<any>(null);
+
+  useEffect(() => {
+    window.addEventListener("message", (event) => {
+      try {
+        const eventData = JSON.parse(event.data);
+        if (eventData?.event === "appContext") {
+          setChatwootData(eventData);
+        } else {
+          console.log(eventData);
+        }
+      } catch (e) {}
+    });
+  }, []);
+
   return (
-    <Layout>
-      <h1>NextAuth.js Example</h1>
-      <p>
-        This is an example site to demonstrate how to use{" "}
-        <a href="https://next-auth.js.org">NextAuth.js</a> for authentication.
-      </p>
-    </Layout>
-  )
+    <main>
+      <h1>Chatwoot App Example</h1>
+      <p>{chatwootData && JSON.stringify(chatwootData)}</p>
+    </main>
+  );
 }
